@@ -21,7 +21,7 @@ end
 local Id = game.PlaceId
 local GameId = game.GameId
 local PlaceIds = {
-	["TRSE"] = { 70876832253163, 116495829188952 },
+	["DR"] = { 70876832253163, 116495829188952 },
 }
 if table.find(PlaceIds["DR"], GameId) then
 	LoadScript("Dead%20Rails.lua")
