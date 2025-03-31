@@ -10,9 +10,14 @@ function ZeldHub:CreateWindow(title, language)
     local ToggleButton = Instance.new("TextButton")
     local UserProfile = Instance.new("ImageLabel")
     local BackgroundBlur = Instance.new("BlurEffect")
-    local Icon = Instance.new("ImageLabel")
     local ThemeToggle = Instance.new("TextButton")
     local ResizeHandle = Instance.new("TextButton")
+    local ExtraToggle = Instance.new("TextButton")
+    local NewButton = Instance.new("TextButton")
+    local AnimationFrame = Instance.new("Frame")
+    local ButtonContainer = Instance.new("Frame")
+    local AnimEffect = Instance.new("ImageLabel")
+    local CloseButton = Instance.new("TextButton")
     
     local themes = {
         Light = {bg = Color3.fromRGB(240, 240, 240), text = Color3.fromRGB(30, 30, 30)},
@@ -34,6 +39,7 @@ function ZeldHub:CreateWindow(title, language)
     MainFrame.ClipsDescendants = true
     MainFrame.Draggable = true 
     MainFrame.Active = true
+    MainFrame.Visible = false
     
     UICorner.CornerRadius = UDim.new(0.5, 0) 
     UICorner.Parent = MainFrame
@@ -87,31 +93,38 @@ function ZeldHub:CreateWindow(title, language)
         Title.TextColor3 = themes[currentTheme].text
     end)
     
-    ResizeHandle.Parent = MainFrame
-    ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
-    ResizeHandle.Position = UDim2.new(1, -25, 1, -25)
-    ResizeHandle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-    ResizeHandle.Text = "🔧"
-    ResizeHandle.TextSize = 14
-    ResizeHandle.Font = Enum.Font.GothamBold
-    ResizeHandle.MouseButton1Down:Connect(function()
-        local inputService = game:GetService("UserInputService")
-        local resizing = true
-        
-        local function updateSize(input)
-            if resizing then
-                local delta = input.Position - MainFrame.Position
-                MainFrame.Size = UDim2.new(0, math.clamp(delta.X, 300, 800), 0, math.clamp(delta.Y, 200, 600))
-            end
-        end
-        
-        local inputChanged;
-        inputChanged = inputService.InputChanged:Connect(updateSize)
-        inputService.InputEnded:Connect(function()
-            resizing = false
-            inputChanged:Disconnect()
-        end)
+    CloseButton.Parent = MainFrame
+    CloseButton.Text = "✖"
+    CloseButton.Size = UDim2.new(0, 50, 0, 50)
+    CloseButton.Position = UDim2.new(1, -60, 0, 60)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 55, 55)
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.TextSize = 20
+    CloseButton.MouseButton1Click:Connect(function()
+        MainFrame.Visible = false
     end)
+    
+    AnimationFrame.Parent = MainFrame
+    AnimationFrame.Size = UDim2.new(1, 0, 1, 0)
+    AnimationFrame.BackgroundTransparency = 1
+    
+    AnimEffect.Parent = AnimationFrame
+    AnimEffect.Size = UDim2.new(1, 0, 1, 0)
+    AnimEffect.BackgroundTransparency = 1
+    AnimEffect.Image = "rbxassetid://694123456"
+    AnimEffect.ImageTransparency = 1
+    
+    local function animateUI()
+        MainFrame.Position = UDim2.new(0.5, -310, -0.5, -240)
+        MainFrame.Visible = true
+        AnimEffect.ImageTransparency = 0.5
+        MainFrame:TweenPosition(UDim2.new(0.5, -310, 0.5, -240), Enum.EasingDirection.Out, Enum.EasingStyle.Bounce, 1, true, function()
+            AnimEffect.ImageTransparency = 1
+        end)
+    end
+    
+    animateUI()
     
     return {Main = MainFrame, Sidebar = Sidebar}
 end
